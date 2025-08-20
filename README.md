@@ -41,6 +41,10 @@ The AI features in this application are powered by Google's Gemini models via Ge
     ```
     GEMINI_API_KEY=your_api_key_here
     ```
+4. Install Genkit globally:
+    ```bash
+    npm install genkit @genkit-ai/googleai
+    ```
 
 ### 3. Running the Development Server
 

@@ -24,12 +24,14 @@ import { Label } from '@/components/ui/label';
 import { Folder, FolderPlus, BookCopy, ChevronRight, Trash2, Settings } from 'lucide-react';
 import { useState } from 'react';
 import { useAppContext } from './foam-pilot-client';
+import { useToast } from '@/hooks/use-toast';
 
 export function CaseExplorer() {
   const { state, dispatch, addCase, loadTutorial, activeCase, setActiveView } = useAppContext();
   const [isNewCaseDialogOpen, setIsNewCaseDialogOpen] = useState(false);
   const [newCaseName, setNewCaseName] = useState('');
   const [caseToDelete, setCaseToDelete] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const handleCreateCase = () => {
     if (newCaseName.trim()) {
@@ -41,8 +43,13 @@ export function CaseExplorer() {
 
   const handleDeleteCase = () => {
     if (caseToDelete) {
+      const deletedCaseName = state.cases.find(c => c.id === caseToDelete)?.name;
       dispatch({ type: 'DELETE_CASE', payload: caseToDelete });
       setCaseToDelete(null);
+      toast({
+        title: 'Case Deleted',
+        description: `The case "${deletedCaseName}" has been successfully deleted.`,
+      });
     }
   };
 
@@ -67,36 +74,36 @@ export function CaseExplorer() {
         <SidebarContent className="p-2">
           <SidebarMenu>
             {state.cases.map(c => (
-              <SidebarMenuItem key={c.id} className="group relative">
+              <SidebarMenuItem key={c.id} className="group">
                  <SidebarMenuButton
                   onClick={() => handleCaseSelection(c.id)}
                   isActive={c.id === activeCase?.id && state.activeView === 'case'}
-                  className="w-full justify-between pr-8"
+                  className="w-full justify-between"
                 >
                   <div className="flex items-center gap-2 truncate flex-1">
                     <Folder />
                     <span className="truncate">{c.name}</span>
                   </div>
-                </SidebarMenuButton>
-                 <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center">
+                   <div className="flex items-center">
                     <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100" onClick={(e) => openDeleteDialog(e, c.id)}>
                         <Trash2 className="h-4 w-4 text-destructive"/>
                     </Button>
                     {c.id === activeCase?.id && state.activeView === 'case' && <ChevronRight className="h-4 w-4" />}
                  </div>
+                </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="gap-2 p-2">
-          <Button variant="outline" onClick={() => setIsNewCaseDialogOpen(true)} className="w-full">
+          <Button variant="outline" onClick={() => setIsNewCaseDialogOpen(true)} className="w-full justify-start">
             <FolderPlus className="mr-2 h-4 w-4 text-foreground" />
             <span className="text-foreground">New Case</span>
           </Button>
-          <Button variant="secondary" onClick={loadTutorial} className="w-full">
+          <Button variant="secondary" onClick={loadTutorial} className="w-full justify-start">
             <BookCopy className="mr-2 h-4 w-4" /> Load Tutorial
           </Button>
-          <Button variant="secondary" onClick={() => setActiveView('settings')} className="w-full">
+          <Button variant="secondary" onClick={() => setActiveView('settings')} className="w-full justify-start">
             <Settings className="mr-2 h-4 w-4" /> Settings
           </Button>
         </SidebarFooter>

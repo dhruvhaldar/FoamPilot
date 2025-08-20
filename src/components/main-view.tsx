@@ -161,52 +161,55 @@ export function MainView() {
             <TabsTrigger value="ai-optimizer"><Sparkles className="mr-2 h-4 w-4" />AI Optimizer</TabsTrigger>
             <TabsTrigger value="block-mesh"><Boxes className="mr-2 h-4 w-4" />BlockMesh</TabsTrigger>
           </TabsList>
-          <ScrollArea className="flex-1 mt-4">
-            <TabsContent value="editor" className="flex-1 flex flex-col min-h-0">
-              <div className="flex justify-between items-center mb-2">
-                  <p className="text-sm font-medium">{selectedFile?.name || 'No file selected'}</p>
-                  <Button onClick={handleSave} disabled={!isUnsaved}>
-                      <Save className="mr-2 h-4 w-4" />
-                      Save
-                  </Button>
-              </div>
-              <div className='flex-1 font-mono text-sm border rounded-md relative bg-background h-[500px]'>
-                <ScrollArea className="h-full w-full absolute">
-                  <Editor
-                      value={editorContent}
-                      onValueChange={handleContentChange}
-                      highlight={code => (
-                        <SyntaxHighlighter language="cpp" style={customStyle} PreTag="div" customStyle={{ margin: 0, padding: 0, background: 'transparent' }}>
-                          {code}
-                        </SyntaxHighlighter>
-                      )}
-                      padding={10}
-                      className="w-full h-full"
-                      style={{
-                        fontFamily: '"Fira code", "Fira Mono", monospace',
-                        fontSize: 14,
-                      }}
-                      placeholder="Select a file to edit..."
-                    />
-                  </ScrollArea>
-              </div>
-            </TabsContent>
-            <TabsContent value="console" className="flex-1 mt-4 flex flex-col min-h-0 h-[500px]">
-              <Card className="flex-1 flex flex-col">
-                  <ScrollArea className="h-full w-full">
-                    <pre id="console-output" className="p-4 bg-secondary rounded-lg h-full overflow-auto text-xs font-mono">
-                      {activeCase.consoleOutput.join('\n')}
-                    </pre>
-                  </ScrollArea>
-              </Card>
-            </TabsContent>
-            <TabsContent value="ai-optimizer" className="flex-1 mt-4">
+          
+          <TabsContent value="editor" className="flex-1 flex flex-col min-h-0 mt-4">
+            <div className="flex justify-between items-center mb-2">
+                <p className="text-sm font-medium">{selectedFile?.name || 'No file selected'}</p>
+                <Button onClick={handleSave} disabled={!isUnsaved}>
+                    <Save className="mr-2 h-4 w-4" />
+                    Save
+                </Button>
+            </div>
+            <div className='flex-1 font-mono text-sm border rounded-md relative bg-background'>
+              <ScrollArea className="h-full w-full absolute">
+                <Editor
+                    value={editorContent}
+                    onValueChange={handleContentChange}
+                    highlight={code => (
+                      <SyntaxHighlighter language="cpp" style={customStyle} PreTag="div" customStyle={{ margin: 0, padding: 0, background: 'transparent' }}>
+                        {code}
+                      </SyntaxHighlighter>
+                    )}
+                    padding={10}
+                    className="w-full h-full"
+                    style={{
+                      fontFamily: '"Fira code", "Fira Mono", monospace',
+                      fontSize: 14,
+                    }}
+                    placeholder="Select a file to edit..."
+                  />
+                </ScrollArea>
+            </div>
+          </TabsContent>
+          <TabsContent value="console" className="flex-1 mt-4 flex flex-col min-h-0">
+            <Card className="flex-1 flex flex-col">
+                <ScrollArea className="h-full w-full">
+                  <pre id="console-output" className="p-4 bg-secondary rounded-lg h-full overflow-auto text-xs font-mono">
+                    {activeCase.consoleOutput.join('\n')}
+                  </pre>
+                </ScrollArea>
+            </Card>
+          </TabsContent>
+          <TabsContent value="ai-optimizer" className="flex-1 mt-4">
+            <ScrollArea className="h-full">
               <AiOptimizer />
-            </TabsContent>
-            <TabsContent value="block-mesh" className="flex-1 mt-4">
+            </ScrollArea>
+          </TabsContent>
+          <TabsContent value="block-mesh" className="flex-1 mt-4">
+            <ScrollArea className="h-full">
               <BlockMeshGenerator addFileToCase={addFileToCase} />
-            </TabsContent>
-          </ScrollArea>
+            </ScrollArea>
+          </TabsContent>
         </Tabs>
       </div>
     </div>

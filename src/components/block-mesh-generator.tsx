@@ -188,25 +188,27 @@ export function BlockMeshGenerator({ addFileToCase }: BlockMeshGeneratorProps) {
             </Button>
           </div>
           
-          {isLoading && (
-            <div className="space-y-2 flex-1">
-              <Skeleton className="h-full w-full" />
-            </div>
-          )}
+          <div className="flex-1 flex flex-col min-h-0">
+            {isLoading && (
+              <div className="space-y-2 flex-1">
+                <Skeleton className="h-full w-full" />
+              </div>
+            )}
 
-          {result && (
-            <div className="flex-1 rounded-lg bg-secondary overflow-auto">
-              <SyntaxHighlighter language="cpp" style={customStyle} className="p-4 text-xs font-mono h-full" PreTag="pre">
-                  {result}
-              </SyntaxHighlighter>
-            </div>
-          )}
+            {result && (
+                <div className="flex-1 rounded-lg bg-secondary overflow-auto min-h-0">
+                  <SyntaxHighlighter language="cpp" style={customStyle} className="p-4 text-xs font-mono h-full" PreTag="pre">
+                      {result}
+                  </SyntaxHighlighter>
+                </div>
+            )}
 
-          {!result && !isLoading && (
-            <div className="flex items-center justify-center bg-secondary rounded-lg flex-1">
-                <p className="text-muted-foreground">Generated file will appear here.</p>
-            </div>
-          )}
+            {!result && !isLoading && (
+              <div className="flex items-center justify-center bg-secondary rounded-lg flex-1">
+                  <p className="text-muted-foreground">Generated file will appear here.</p>
+              </div>
+            )}
+          </div>
 
         </div>
       </CardContent>

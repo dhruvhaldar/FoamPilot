@@ -184,7 +184,7 @@ export function FoamPilotClient() {
             <Sidebar collapsible="icon">
               <CaseExplorer />
             </Sidebar>
-            <SidebarInset className="p-4 flex-1 overflow-auto">
+            <SidebarInset className="p-4 flex-1 overflow-auto grid">
               {renderMainContent()}
             </SidebarInset>
           </div>

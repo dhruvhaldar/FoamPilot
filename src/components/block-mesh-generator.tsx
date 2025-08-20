@@ -80,7 +80,7 @@ interface BlockMeshGeneratorProps {
 
 const CodeEditor = ({ value, onValueChange, placeholder, rows }: { value: string, onValueChange: (value: string) => void, placeholder: string, rows: number }) => {
     return (
-        <div className={`font-mono text-sm border rounded-md relative bg-background h-[${rows * 1.5}rem] min-h-[80px]`}>
+        <div className="font-mono text-sm border rounded-md relative bg-background min-h-[80px]" style={{ height: `${rows * 1.5}rem`}}>
             <ScrollArea className="h-full w-full absolute">
                 <Editor
                     value={value}

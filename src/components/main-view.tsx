@@ -146,7 +146,7 @@ export function MainView() {
           </ul>
         </CardContent>
       </Card>
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-h-0">
         <header className="flex items-center justify-between pb-4">
           <h2 className="text-xl font-semibold">{activeCase.name}</h2>
           <Button onClick={handleRunSimulation} disabled={activeCase.isRunning}>
@@ -154,14 +154,14 @@ export function MainView() {
             {activeCase.isRunning ? 'Running...' : 'Run Simulation'}
           </Button>
         </header>
-        <Tabs defaultValue="editor" className="flex-1 flex flex-col">
+        <Tabs defaultValue="editor" className="flex-1 flex flex-col min-h-0">
           <TabsList>
             <TabsTrigger value="editor"><File className="mr-2 h-4 w-4" />Editor</TabsTrigger>
             <TabsTrigger value="console"><Terminal className="mr-2 h-4 w-4" />Console</TabsTrigger>
             <TabsTrigger value="ai-optimizer"><Sparkles className="mr-2 h-4 w-4" />AI Optimizer</TabsTrigger>
             <TabsTrigger value="block-mesh"><Boxes className="mr-2 h-4 w-4" />BlockMesh</TabsTrigger>
           </TabsList>
-          <TabsContent value="editor" className="flex-1 flex flex-col mt-4">
+          <TabsContent value="editor" className="flex-1 flex flex-col mt-4 min-h-0">
             <div className="flex justify-between items-center mb-2">
                 <p className="text-sm font-medium">{selectedFile?.name || 'No file selected'}</p>
                 <Button onClick={handleSave} disabled={!isUnsaved}>
@@ -190,7 +190,7 @@ export function MainView() {
                 </ScrollArea>
             </div>
           </TabsContent>
-          <TabsContent value="console" className="flex-1 mt-4 flex flex-col">
+          <TabsContent value="console" className="flex-1 mt-4 flex flex-col min-h-0">
             <Card className="flex-1 flex flex-col">
                 <ScrollArea className="h-full w-full">
                   <pre id="console-output" className="p-4 bg-secondary rounded-lg h-full overflow-auto text-xs font-mono">

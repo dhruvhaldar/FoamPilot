@@ -131,9 +131,9 @@ export function BlockMeshGenerator({ addFileToCase }: BlockMeshGeneratorProps) {
             </Button>
         </div>
         <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="font-semibold text-lg flex items-center gap-2"><Boxes className="text-accent-foreground h-5 w-5" />Generated `blockMeshDict`</h3>
-            <Button onClick={handleAddFile} disabled={!result}>
+          <div className="flex justify-between items-start gap-4">
+            <h3 className="font-semibold text-lg flex items-center gap-2 pt-1.5"><Boxes className="text-accent-foreground h-5 w-5" />Generated `blockMeshDict`</h3>
+            <Button onClick={handleAddFile} disabled={!result} className="shrink-0">
                 <FilePlus className="mr-2 h-4 w-4" />
                 Add to Case
             </Button>

@@ -151,10 +151,10 @@ export function MainView() {
               placeholder="Select a file to edit..."
             />
           </TabsContent>
-          <TabsContent value="console" className="flex-1 mt-4">
-            <Card className="h-full">
-              <CardContent className="p-0">
-                <pre id="console-output" className="p-4 bg-secondary rounded-lg h-[calc(100vh-20rem)] overflow-auto text-xs font-mono">
+          <TabsContent value="console" className="flex-1 mt-4 flex flex-col">
+            <Card className="flex-1">
+              <CardContent className="p-0 h-full">
+                <pre id="console-output" className="p-4 bg-secondary rounded-lg h-full overflow-auto text-xs font-mono">
                   {activeCase.consoleOutput.join('\n')}
                 </pre>
               </CardContent>

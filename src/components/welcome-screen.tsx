@@ -6,7 +6,7 @@ import { useAppContext } from './foam-pilot-client';
 export function WelcomeScreen() {
     const { loadTutorial } = useAppContext();
     return (
-        <div className="h-full flex items-center justify-center">
+        <div className="h-full flex items-center justify-end">
             <Card className="w-full max-w-lg text-center shadow-lg">
                 <CardHeader>
                     <CardTitle className="text-3xl font-bold tracking-tight">Welcome to FoamPilot</CardTitle>

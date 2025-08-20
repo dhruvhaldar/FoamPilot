@@ -145,40 +145,42 @@ export function BlockMeshGenerator({ addFileToCase }: BlockMeshGeneratorProps) {
   }
 
   return (
-    <Card>
+    <Card className="h-full flex flex-col">
       <CardHeader>
         <CardTitle>AI `blockMeshDict` Generator</CardTitle>
         <CardDescription>
           Define your geometry and let the AI generate the `blockMeshDict` file for you.
         </CardDescription>
       </CardHeader>
-      <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="space-y-4">
-            <div>
-                <Label htmlFor="convertToMeters">Convert To Meters</Label>
-                <Input id="convertToMeters" value={formData.convertToMeters} onChange={(e) => handleFormDataChange('convertToMeters', e.target.value)} />
+      <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-8 flex-1 min-h-0">
+        <ScrollArea className="h-full">
+            <div className="space-y-4 pr-6">
+                <div>
+                    <Label htmlFor="convertToMeters">Convert To Meters</Label>
+                    <Input id="convertToMeters" value={formData.convertToMeters} onChange={(e) => handleFormDataChange('convertToMeters', e.target.value)} />
+                </div>
+                <div>
+                    <Label htmlFor="vertices">Vertices</Label>
+                    <CodeEditor value={formData.vertices} onValueChange={(v) => handleFormDataChange('vertices', v)} placeholder={verticesPlaceholder} rows={9} />
+                </div>
+                <div>
+                    <Label htmlFor="blocks">Blocks</Label>
+                    <CodeEditor value={formData.blocks} onValueChange={(v) => handleFormDataChange('blocks', v)} placeholder={blocksPlaceholder} rows={3} />
+                </div>
+                <div>
+                    <Label htmlFor="edges">Edges (Optional)</Label>
+                    <CodeEditor value={formData.edges} onValueChange={(v) => handleFormDataChange('edges', v)} placeholder="e.g., arc 1 5 (1.0 0.5 0)" rows={3} />
+                </div>
+                 <div>
+                    <Label htmlFor="boundary">Boundary</Label>
+                    <CodeEditor value={formData.boundary} onValueChange={(v) => handleFormDataChange('boundary', v)} placeholder={boundaryPlaceholder} rows={15} />
+                </div>
+                 <Button onClick={handleGenerate} disabled={isLoading}>
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    {isLoading ? 'Generating...' : 'Generate File'}
+                </Button>
             </div>
-            <div>
-                <Label htmlFor="vertices">Vertices</Label>
-                <CodeEditor value={formData.vertices} onValueChange={(v) => handleFormDataChange('vertices', v)} placeholder={verticesPlaceholder} rows={9} />
-            </div>
-            <div>
-                <Label htmlFor="blocks">Blocks</Label>
-                <CodeEditor value={formData.blocks} onValueChange={(v) => handleFormDataChange('blocks', v)} placeholder={blocksPlaceholder} rows={3} />
-            </div>
-            <div>
-                <Label htmlFor="edges">Edges (Optional)</Label>
-                <CodeEditor value={formData.edges} onValueChange={(v) => handleFormDataChange('edges', v)} placeholder="e.g., arc 1 5 (1.0 0.5 0)" rows={3} />
-            </div>
-             <div>
-                <Label htmlFor="boundary">Boundary</Label>
-                <CodeEditor value={formData.boundary} onValueChange={(v) => handleFormDataChange('boundary', v)} placeholder={boundaryPlaceholder} rows={15} />
-            </div>
-             <Button onClick={handleGenerate} disabled={isLoading}>
-                <Sparkles className="mr-2 h-4 w-4" />
-                {isLoading ? 'Generating...' : 'Generate File'}
-            </Button>
-        </div>
+        </ScrollArea>
         <div className="space-y-4 flex flex-col">
           <div className="space-y-2">
             <h3 className="font-semibold text-lg flex items-center gap-2"><Boxes className="text-accent-foreground h-5 w-5" />Generated `blockMeshDict`</h3>

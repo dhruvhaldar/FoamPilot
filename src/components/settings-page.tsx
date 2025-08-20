@@ -4,8 +4,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAppContext } from './foam-pilot-client';
+import { useToast } from '@/hooks/use-toast';
 
 export function SettingsPage() {
+    const { setActiveView } = useAppContext();
+    const { toast } = useToast();
+
+    const handleSave = () => {
+        // In a real app, you'd save the settings here.
+        toast({
+            title: 'Settings Saved',
+            description: 'Your configuration has been updated.',
+        });
+        setActiveView('welcome');
+    }
+
     return (
         <Card>
             <CardHeader>
@@ -25,7 +39,7 @@ export function SettingsPage() {
                         This is the directory where your cases will be saved and loaded from.
                     </p>
                 </div>
-                 <Button>Save Settings</Button>
+                 <Button onClick={handleSave}>Save Settings</Button>
             </CardContent>
         </Card>
     )

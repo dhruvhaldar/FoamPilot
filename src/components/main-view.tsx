@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAppContext } from './foam-pilot-client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { File, PlayCircle, Save, Terminal, Sparkles, FolderOpen, CircleDot, Boxes } from 'lucide-react';
+import { File, PlayCircle, Save, Terminal, Sparkles, FolderOpen, CircleDot, Boxes, LineChart } from 'lucide-react';
 import { AiOptimizer } from './ai-optimizer';
 import type { CaseFile } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
@@ -14,6 +14,9 @@ import Editor from 'react-simple-code-editor';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { CartesianGrid, Line, XAxis, YAxis, ComposedChart } from 'recharts';
+
 
 const customStyle = {
     ...prism,
@@ -35,6 +38,49 @@ const customStyle = {
     'operator': {
         color: '#111827'
     }
+}
+
+function ConsoleChart({ consoleOutput }: { consoleOutput: string[] }) {
+    const chartData = useMemo(() => {
+        return consoleOutput
+            .map(line => {
+                const match = line.match(/Time = (\d+(\.\d+)?)/);
+                if (match) {
+                    return { time: parseFloat(match[1]), value: Math.random() * 10 }; // Using random data for visualization
+                }
+                return null;
+            })
+            .filter(item => item !== null);
+    }, [consoleOutput]);
+
+    if (chartData.length === 0) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <p className="text-muted-foreground">Run simulation to see chart data.</p>
+            </div>
+        )
+    }
+
+    const chartConfig = {
+        value: {
+            label: "Value",
+            color: "hsl(var(--chart-1))",
+        },
+    }
+
+    return (
+        <ChartContainer config={chartConfig} className="h-full w-full">
+            <ComposedChart accessibilityLayer data={chartData}>
+                <CartesianGrid vertical={false} />
+                <XAxis dataKey="time" type="number" name="Time" />
+                <YAxis />
+                <ChartTooltip
+                    content={<ChartTooltipContent indicator="dot" />}
+                />
+                <Line dataKey="value" type="monotone" stroke="var(--color-value)" strokeWidth={2} dot={false} />
+            </ComposedChart>
+        </ChartContainer>
+    );
 }
 
 export function MainView() {
@@ -158,6 +204,7 @@ export function MainView() {
           <TabsList>
             <TabsTrigger value="editor"><File className="mr-2 h-4 w-4" />Editor</TabsTrigger>
             <TabsTrigger value="console"><Terminal className="mr-2 h-4 w-4" />Console</TabsTrigger>
+            <TabsTrigger value="visualization"><LineChart className="mr-2 h-4 w-4" />Visualization</TabsTrigger>
             <TabsTrigger value="ai-optimizer"><Sparkles className="mr-2 h-4 w-4" />AI Optimizer</TabsTrigger>
             <TabsTrigger value="block-mesh"><Boxes className="mr-2 h-4 w-4" />BlockMesh</TabsTrigger>
           </TabsList>
@@ -198,6 +245,13 @@ export function MainView() {
                     {activeCase.consoleOutput.join('\n')}
                   </pre>
                 </ScrollArea>
+            </Card>
+          </TabsContent>
+           <TabsContent value="visualization" className="flex-1 mt-4 flex flex-col min-h-0">
+            <Card className="flex-1 flex flex-col">
+                <CardContent className="h-full w-full p-4">
+                    <ConsoleChart consoleOutput={activeCase.consoleOutput} />
+                </CardContent>
             </Card>
           </TabsContent>
           <TabsContent value="ai-optimizer" className="flex-1 mt-4">

@@ -109,7 +109,7 @@ export function MainView() {
     } else {
       setEditorContent('');
     }
-  }, [selectedFileId, activeCase]);
+  }, [selectedFile, activeCase]);
 
   const handleSave = () => {
     if (activeCase && selectedFileId && isUnsaved) {
@@ -219,13 +219,13 @@ export function MainView() {
                     Save
                 </Button>
             </div>
-            <div className='flex-1 font-mono text-sm border rounded-md relative bg-background'>
+            <div className='flex-1 font-mono text-sm border rounded-md relative bg-background min-h-0'>
               <ScrollArea className="h-full w-full absolute">
                 <Editor
                     value={editorContent}
                     onValueChange={handleContentChange}
                     highlight={code => (
-                      <SyntaxHighlighter language="cpp" style={customStyle} PreTag="div" customStyle={{ margin: 0, padding: 0, background: 'transparent' }}>
+                      <SyntaxHighlighter language="cpp" style={customStyle} PreTag="div" customStyle={{ margin: 0, padding: 0, background: 'transparent', height: '100%', width: '100%' }}>
                         {code}
                       </SyntaxHighlighter>
                     )}

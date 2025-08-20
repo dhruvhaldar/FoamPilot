@@ -268,10 +268,8 @@ export function MainView() {
               <AiOptimizer />
             </ScrollArea>
           </TabsContent>
-          <TabsContent value="block-mesh" className="flex-1 mt-4 flex flex-col min-h-0">
-            <ScrollArea className="h-full">
+          <TabsContent value="block-mesh" className="flex-1 mt-4">
               <BlockMeshGenerator addFileToCase={addFileToCase} />
-            </ScrollArea>
           </TabsContent>
         </Tabs>
       </div>

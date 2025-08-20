@@ -162,30 +162,32 @@ export function MainView() {
             <TabsTrigger value="ai-optimizer"><Sparkles className="mr-2 h-4 w-4" />AI Optimizer</TabsTrigger>
             <TabsTrigger value="block-mesh"><Boxes className="mr-2 h-4 w-4" />BlockMesh</TabsTrigger>
           </TabsList>
-          <TabsContent value="editor" className="flex-1 mt-4">
-            <div className="flex justify-between items-center mb-2">
+          <TabsContent value="editor" className="flex-1 mt-4 flex flex-col">
+            <div className="flex justify-between items-center mb-2 shrink-0">
                 <p className="text-sm font-medium">{selectedFile?.name || 'No file selected'}</p>
                 <Button onClick={handleSave} disabled={!isUnsaved}>
                     <Save className="mr-2 h-4 w-4" />
                     Save
                 </Button>
             </div>
-             <Editor
-                value={editorContent}
-                onValueChange={handleContentChange}
-                highlight={code => (
-                    <SyntaxHighlighter language="cpp" style={customStyle} PreTag="div">
-                        {code}
-                    </SyntaxHighlighter>
-                )}
-                padding={10}
-                className="font-mono text-sm border rounded-md h-[calc(100vh-20rem)] bg-background"
-                style={{
-                    fontFamily: '"Fira code", "Fira Mono", monospace',
-                    fontSize: 14,
-                }}
-                placeholder="Select a file to edit..."
-                />
+             <ScrollArea className="border rounded-md bg-background flex-1">
+                <Editor
+                    value={editorContent}
+                    onValueChange={handleContentChange}
+                    highlight={code => (
+                        <SyntaxHighlighter language="cpp" style={customStyle} PreTag="div">
+                            {code}
+                        </SyntaxHighlighter>
+                    )}
+                    padding={10}
+                    className="font-mono text-sm h-full w-full"
+                    style={{
+                        fontFamily: '"Fira code", "Fira Mono", monospace',
+                        fontSize: 14,
+                    }}
+                    placeholder="Select a file to edit..."
+                    />
+            </ScrollArea>
           </TabsContent>
           <TabsContent value="console" className="flex-1 mt-4">
             <Card className="h-full">

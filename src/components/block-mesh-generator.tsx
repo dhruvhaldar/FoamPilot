@@ -80,25 +80,40 @@ interface BlockMeshGeneratorProps {
 
 const CodeEditor = ({ value, onValueChange, placeholder, rows }: { value: string, onValueChange: (value: string) => void, placeholder: string, rows: number }) => {
     return (
-        <div className="font-mono text-sm border rounded-md relative bg-background min-h-[80px]" style={{ height: `${rows * 1.5}rem`}}>
-            <ScrollArea className="h-full w-full absolute">
+        <div className="font-mono text-sm border rounded-md relative bg-background min-h-[80px] w-full" style={{ height: `${rows * 1.5}rem`}}>
+            <div className="absolute inset-0 overflow-auto">
                 <Editor
                     value={value}
                     onValueChange={onValueChange}
                     highlight={code => (
-                        <SyntaxHighlighter language="cpp" style={customStyle} PreTag="div" customStyle={{ margin: 0, padding: 0, background: 'transparent' }}>
+                        <SyntaxHighlighter 
+                            language="cpp" 
+                            style={customStyle} 
+                            PreTag="div" 
+                            customStyle={{ 
+                                margin: 0, 
+                                padding: '0.625rem', 
+                                background: 'transparent',
+                                minWidth: '100%',
+                                width: 'fit-content',
+                                display: 'inline-block'
+                            }}
+                        >
                             {code}
                         </SyntaxHighlighter>
                     )}
                     padding={10}
-                    className="w-full h-full"
+                    className="w-full h-full min-w-full"
                     style={{
                         fontFamily: '"Fira code", "Fira Mono", monospace',
                         fontSize: 14,
+                        width: '100%',
+                        minWidth: '100%',
+                        whiteSpace: 'pre',
                     }}
                     placeholder={placeholder}
                 />
-            </ScrollArea>
+            </div>
         </div>
     )
 }
@@ -165,7 +180,16 @@ export function BlockMeshGenerator({ addFileToCase }: BlockMeshGeneratorProps) {
             </div>
             <div>
                 <Label htmlFor="blocks">Blocks</Label>
-                <CodeEditor value={formData.blocks} onValueChange={(v) => handleFormDataChange('blocks', v)} placeholder={blocksPlaceholder} rows={3} />
+                <div className="relative">
+                    <div className="overflow-x-auto">
+                        <CodeEditor 
+                            value={formData.blocks} 
+                            onValueChange={(v) => handleFormDataChange('blocks', v)} 
+                            placeholder={blocksPlaceholder} 
+                            rows={3} 
+                        />
+                    </div>
+                </div>
             </div>
             <div>
                 <Label htmlFor="edges">Edges (Optional)</Label>

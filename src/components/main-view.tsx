@@ -14,6 +14,21 @@ import Editor from 'react-simple-code-editor';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+const customStyle = {
+    ...prism,
+    'comment': {
+        color: '#228b22' /* Forest Green */
+    },
+    'prolog': {
+        color: '#228b22'
+    },
+    'doctype': {
+        color: '#228b22'
+    },
+    'cdata': {
+        color: '#228b22'
+    },
+}
 
 export function MainView() {
   const { activeCase, dispatch } = useAppContext();
@@ -152,7 +167,7 @@ export function MainView() {
                   value={editorContent}
                   onValueChange={handleContentChange}
                   highlight={code => (
-                    <SyntaxHighlighter language="cpp" style={prism} PreTag="div" customStyle={{ margin: 0, padding: 0, background: 'transparent' }}>
+                    <SyntaxHighlighter language="cpp" style={customStyle} PreTag="div" customStyle={{ margin: 0, padding: 0, background: 'transparent' }}>
                       {code}
                     </SyntaxHighlighter>
                   )}

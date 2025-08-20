@@ -13,6 +13,22 @@ import { Sparkles, Wand2 } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+const customStyle = {
+    ...prism,
+    'comment': {
+        color: '#228b22' /* Forest Green */
+    },
+    'prolog': {
+        color: '#228b22'
+    },
+    'doctype': {
+        color: '#228b22'
+    },
+    'cdata': {
+        color: '#228b22'
+    },
+}
+
 export function AiOptimizer() {
   const { activeCase, dispatch } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
@@ -95,7 +111,7 @@ export function AiOptimizer() {
           <div className="space-y-6">
             <div>
               <h3 className="font-semibold text-lg mb-2 flex items-center gap-2"><Sparkles className="text-accent-foreground h-5 w-5" />Suggested Parameters</h3>
-              <SyntaxHighlighter language="cpp" style={prism} className="p-4 bg-secondary rounded-lg text-sm font-mono overflow-auto" PreTag="pre">
+              <SyntaxHighlighter language="cpp" style={customStyle} className="p-4 bg-secondary rounded-lg text-sm font-mono overflow-auto" PreTag="pre">
                 {result.suggestedParameters}
               </SyntaxHighlighter>
             </div>

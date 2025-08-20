@@ -13,6 +13,22 @@ import { Boxes, FilePlus, Sparkles } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+const customStyle = {
+    ...prism,
+    'comment': {
+        color: '#228b22' /* Forest Green */
+    },
+    'prolog': {
+        color: '#228b22'
+    },
+    'doctype': {
+        color: '#228b22'
+    },
+    'cdata': {
+        color: '#228b22'
+    },
+}
+
 const verticesPlaceholder = `(0 0 0)
 (1 0 0)
 (1 1 0)
@@ -149,7 +165,7 @@ export function BlockMeshGenerator({ addFileToCase }: BlockMeshGeneratorProps) {
 
           {result && (
             <div className="flex-1 rounded-lg bg-secondary overflow-auto">
-              <SyntaxHighlighter language="cpp" style={prism} className="p-4 text-xs font-mono h-full" PreTag="pre">
+              <SyntaxHighlighter language="cpp" style={customStyle} className="p-4 text-xs font-mono h-full" PreTag="pre">
                   {result}
               </SyntaxHighlighter>
             </div>

@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
@@ -12,6 +11,8 @@ import { generateBlockMeshDict } from '@/ai/flows/generate-blockmesh-dict';
 import { Boxes, FilePlus, Sparkles } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import Editor from 'react-simple-code-editor';
+import { ScrollArea } from './ui/scroll-area';
 
 const customStyle = {
     ...prism,
@@ -77,6 +78,31 @@ interface BlockMeshGeneratorProps {
     addFileToCase: (name: string, content: string) => void;
 }
 
+const CodeEditor = ({ value, onValueChange, placeholder, rows }: { value: string, onValueChange: (value: string) => void, placeholder: string, rows: number }) => {
+    return (
+        <div className={`font-mono text-sm border rounded-md relative bg-background h-[${rows * 1.5}rem] min-h-[80px]`}>
+            <ScrollArea className="h-full w-full absolute">
+                <Editor
+                    value={value}
+                    onValueChange={onValueChange}
+                    highlight={code => (
+                        <SyntaxHighlighter language="cpp" style={customStyle} PreTag="div" customStyle={{ margin: 0, padding: 0, background: 'transparent' }}>
+                            {code}
+                        </SyntaxHighlighter>
+                    )}
+                    padding={10}
+                    className="w-full h-full"
+                    style={{
+                        fontFamily: '"Fira code", "Fira Mono", monospace',
+                        fontSize: 14,
+                    }}
+                    placeholder={placeholder}
+                />
+            </ScrollArea>
+        </div>
+    )
+}
+
 export function BlockMeshGenerator({ addFileToCase }: BlockMeshGeneratorProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
@@ -89,9 +115,8 @@ export function BlockMeshGenerator({ addFileToCase }: BlockMeshGeneratorProps) {
   });
   const { toast } = useToast();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target;
-    setFormData(prev => ({...prev, [id]: value }));
+  const handleFormDataChange = (field: keyof typeof formData, value: string) => {
+    setFormData(prev => ({...prev, [field]: value }));
   };
 
   const handleGenerate = async () => {
@@ -131,23 +156,23 @@ export function BlockMeshGenerator({ addFileToCase }: BlockMeshGeneratorProps) {
         <div className="space-y-4">
             <div>
                 <Label htmlFor="convertToMeters">Convert To Meters</Label>
-                <Input id="convertToMeters" value={formData.convertToMeters} onChange={handleChange} />
+                <Input id="convertToMeters" value={formData.convertToMeters} onChange={(e) => handleFormDataChange('convertToMeters', e.target.value)} />
             </div>
             <div>
                 <Label htmlFor="vertices">Vertices</Label>
-                <Textarea id="vertices" value={formData.vertices} onChange={handleChange} rows={9} placeholder={verticesPlaceholder} className="font-mono" />
+                <CodeEditor value={formData.vertices} onValueChange={(v) => handleFormDataChange('vertices', v)} placeholder={verticesPlaceholder} rows={9} />
             </div>
             <div>
                 <Label htmlFor="blocks">Blocks</Label>
-                <Textarea id="blocks" value={formData.blocks} onChange={handleChange} rows={3} placeholder={blocksPlaceholder} className="font-mono" />
+                <CodeEditor value={formData.blocks} onValueChange={(v) => handleFormDataChange('blocks', v)} placeholder={blocksPlaceholder} rows={3} />
             </div>
             <div>
                 <Label htmlFor="edges">Edges (Optional)</Label>
-                <Textarea id="edges" value={formData.edges} onChange={handleChange} rows={3} placeholder="e.g., arc 1 5 (1.0 0.5 0)" className="font-mono" />
+                <CodeEditor value={formData.edges} onValueChange={(v) => handleFormDataChange('edges', v)} placeholder="e.g., arc 1 5 (1.0 0.5 0)" rows={3} />
             </div>
              <div>
                 <Label htmlFor="boundary">Boundary</Label>
-                <Textarea id="boundary" value={formData.boundary} onChange={handleChange} rows={15} placeholder={boundaryPlaceholder} className="font-mono" />
+                <CodeEditor value={formData.boundary} onValueChange={(v) => handleFormDataChange('boundary', v)} placeholder={boundaryPlaceholder} rows={15} />
             </div>
              <Button onClick={handleGenerate} disabled={isLoading}>
                 <Sparkles className="mr-2 h-4 w-4" />

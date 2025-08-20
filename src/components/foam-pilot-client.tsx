@@ -1,28 +1,34 @@
 'use client';
 
-import React, { createContext, useContext, useReducer, ReactNode, useMemo } from 'react';
+import React, { createContext, useContext, useReducer, ReactNode, useMemo, useState } from 'react';
 import type { Case } from '@/lib/types';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { CaseExplorer } from './case-explorer';
 import { MainView } from './main-view';
 import { tutorialCase } from '@/lib/mock-data';
 import { WelcomeScreen } from './welcome-screen';
+import { SettingsPage } from './settings-page';
+
+type ActiveView = 'welcome' | 'case' | 'settings';
 
 interface AppState {
   cases: Case[];
   activeCaseId: string | null;
+  activeView: ActiveView;
 }
 
 type Action =
   | { type: 'ADD_CASE'; payload: Case }
   | { type: 'DELETE_CASE'; payload: string }
   | { type: 'SET_ACTIVE_CASE'; payload: string | null }
+  | { type: 'SET_ACTIVE_VIEW'; payload: ActiveView }
   | { type: 'UPDATE_CASE'; payload: Partial<Case> & { id: string } }
   | { type: 'UPDATE_FILE'; payload: { caseId: string, fileId: string, content: string } };
 
 const initialState: AppState = {
   cases: [],
   activeCaseId: null,
+  activeView: 'welcome',
 };
 
 function appReducer(state: AppState, action: Action): AppState {
@@ -32,18 +38,22 @@ function appReducer(state: AppState, action: Action): AppState {
         ...state,
         cases: [...state.cases, action.payload],
         activeCaseId: action.payload.id,
+        activeView: 'case',
       };
     case 'DELETE_CASE': {
         const newCases = state.cases.filter(c => c.id !== action.payload);
-        const newActiveCaseId = state.activeCaseId === action.payload ? null : state.activeCaseId;
+        const newActiveCaseId = state.activeCaseId === action.payload ? (newCases.length > 0 ? newCases[0].id : null) : state.activeCaseId;
         return {
             ...state,
             cases: newCases,
             activeCaseId: newActiveCaseId,
+            activeView: newActiveCaseId ? 'case' : 'welcome',
         };
     }
     case 'SET_ACTIVE_CASE':
       return { ...state, activeCaseId: action.payload };
+    case 'SET_ACTIVE_VIEW':
+        return { ...state, activeView: action.payload };
     case 'UPDATE_CASE':
       return {
         ...state,
@@ -80,6 +90,7 @@ interface AppContextType {
   activeCase: Case | null;
   addCase: (name: string) => void;
   loadTutorial: () => void;
+  setActiveView: (view: ActiveView) => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -115,14 +126,31 @@ export function FoamPilotClient() {
     dispatch({ type: 'ADD_CASE', payload: newCase });
   };
 
+  const setActiveView = (view: ActiveView) => {
+    dispatch({ type: 'SET_ACTIVE_VIEW', payload: view });
+  }
+
   const loadTutorial = () => {
     if (!state.cases.find(c => c.id === tutorialCase.id)) {
         dispatch({ type: 'ADD_CASE', payload: tutorialCase });
     }
     dispatch({ type: 'SET_ACTIVE_CASE', payload: tutorialCase.id });
+    setActiveView('case');
   };
+  
+  const renderMainContent = () => {
+    switch(state.activeView) {
+        case 'case':
+            return activeCase ? <MainView /> : <WelcomeScreen />;
+        case 'settings':
+            return <SettingsPage />;
+        case 'welcome':
+        default:
+            return <WelcomeScreen />;
+    }
+  }
 
-  const contextValue = { state, dispatch, activeCase, addCase, loadTutorial };
+  const contextValue = { state, dispatch, activeCase, addCase, loadTutorial, setActiveView };
 
   return (
     <AppContext.Provider value={contextValue}>
@@ -130,11 +158,7 @@ export function FoamPilotClient() {
         <div className="flex h-full">
           <CaseExplorer />
           <main className="flex-1 p-4">
-            {activeCase ? (
-                <MainView />
-            ) : (
-                <WelcomeScreen />
-            )}
+            {renderMainContent()}
           </main>
         </div>
       </SidebarProvider>

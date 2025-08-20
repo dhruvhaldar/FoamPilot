@@ -21,12 +21,12 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Folder, FolderPlus, BookCopy, ChevronRight, Trash2 } from 'lucide-react';
+import { Folder, FolderPlus, BookCopy, ChevronRight, Trash2, Settings } from 'lucide-react';
 import { useState } from 'react';
 import { useAppContext } from './foam-pilot-client';
 
 export function CaseExplorer() {
-  const { state, dispatch, addCase, loadTutorial, activeCase } = useAppContext();
+  const { state, dispatch, addCase, loadTutorial, activeCase, setActiveView } = useAppContext();
   const [isNewCaseDialogOpen, setIsNewCaseDialogOpen] = useState(false);
   const [newCaseName, setNewCaseName] = useState('');
   const [caseToDelete, setCaseToDelete] = useState<string | null>(null);
@@ -51,6 +51,11 @@ export function CaseExplorer() {
     setCaseToDelete(caseId);
   }
 
+  const handleCaseSelection = (caseId: string) => {
+    dispatch({ type: 'SET_ACTIVE_CASE', payload: caseId });
+    setActiveView('case');
+  }
+
   const caseForDeletion = state.cases.find(c => c.id === caseToDelete);
 
   return (
@@ -64,8 +69,8 @@ export function CaseExplorer() {
             {state.cases.map(c => (
               <SidebarMenuItem key={c.id}>
                 <SidebarMenuButton
-                  onClick={() => dispatch({ type: 'SET_ACTIVE_CASE', payload: c.id })}
-                  isActive={c.id === activeCase?.id}
+                  onClick={() => handleCaseSelection(c.id)}
+                  isActive={c.id === activeCase?.id && state.activeView === 'case'}
                   className="justify-between group"
                 >
                   <div className="flex items-center gap-2 truncate">
@@ -73,7 +78,7 @@ export function CaseExplorer() {
                     <span className="truncate">{c.name}</span>
                   </div>
                    <div className="flex items-center">
-                    {c.id === activeCase?.id && <ChevronRight className="h-4 w-4" />}
+                    {c.id === activeCase?.id && state.activeView === 'case' && <ChevronRight className="h-4 w-4" />}
                     <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100" onClick={(e) => openDeleteDialog(e, c.id)}>
                         <Trash2 className="h-4 w-4 text-destructive"/>
                     </Button>
@@ -90,6 +95,13 @@ export function CaseExplorer() {
           </Button>
           <Button variant="secondary" onClick={loadTutorial}>
             <BookCopy className="mr-2 h-4 w-4" /> Load Tutorial
+          </Button>
+          <Button 
+            variant="ghost" 
+            onClick={() => setActiveView('settings')}
+            className="w-full justify-start"
+            >
+            <Settings className="mr-2 h-4 w-4" /> Settings
           </Button>
         </SidebarFooter>
       </Sidebar>

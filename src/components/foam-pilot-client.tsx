@@ -121,9 +121,18 @@ export function FoamPilotClient() {
           <div className="col-span-1">
             <CaseExplorer />
           </div>
-          <div className="col-span-2 overflow-auto">
-            {activeCase ? <MainView /> : <WelcomeScreen />}
-          </div>
+          {activeCase ? (
+            <div className="col-span-2 overflow-auto">
+              <MainView />
+            </div>
+          ) : (
+            <>
+              <div className="col-span-1"></div>
+              <div className="col-span-1 overflow-auto">
+                <WelcomeScreen />
+              </div>
+            </>
+          )}
         </div>
       </SidebarProvider>
     </AppContext.Provider>

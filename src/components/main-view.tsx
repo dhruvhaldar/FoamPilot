@@ -152,8 +152,8 @@ export function MainView() {
             />
           </TabsContent>
           <TabsContent value="console" className="flex-1 mt-4 flex flex-col">
-            <Card className="flex-1">
-              <CardContent className="p-0 h-full">
+            <Card className="flex-1 flex flex-col">
+              <CardContent className="p-0 flex-1">
                 <pre id="console-output" className="p-4 bg-secondary rounded-lg h-full overflow-auto text-xs font-mono">
                   {activeCase.consoleOutput.join('\n')}
                 </pre>

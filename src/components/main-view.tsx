@@ -5,7 +5,7 @@ import { useAppContext } from './foam-pilot-client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { File, PlayCircle, Save, Terminal, Sparkles, FolderOpen, CircleDot, Boxes, LineChart } from 'lucide-react';
+import { File, PlayCircle, Save, Terminal, Sparkles, FolderOpen, CircleDot, Boxes, LineChart, Waypoints } from 'lucide-react';
 import { AiOptimizer } from './ai-optimizer';
 import type { CaseFile } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
@@ -16,6 +16,7 @@ import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { CartesianGrid, Line, XAxis, YAxis, ComposedChart } from 'recharts';
+import { WorkflowVisualizer } from './workflow-visualizer';
 
 
 const customStyle = {
@@ -203,6 +204,7 @@ export function MainView() {
         <Tabs defaultValue="editor" className="flex-1 flex flex-col min-h-0">
           <TabsList>
             <TabsTrigger value="editor"><File className="mr-2 h-4 w-4" />Editor</TabsTrigger>
+            <TabsTrigger value="workflow"><Waypoints className="mr-2 h-4 w-4" />Workflow</TabsTrigger>
             <TabsTrigger value="console"><Terminal className="mr-2 h-4 w-4" />Console</TabsTrigger>
             <TabsTrigger value="visualization"><LineChart className="mr-2 h-4 w-4" />Visualization</TabsTrigger>
             <TabsTrigger value="ai-optimizer"><Sparkles className="mr-2 h-4 w-4" />AI Optimizer</TabsTrigger>
@@ -237,6 +239,11 @@ export function MainView() {
                   />
                 </ScrollArea>
             </div>
+          </TabsContent>
+          <TabsContent value="workflow" className="flex-1 mt-4 flex flex-col min-h-0">
+            <ScrollArea className="h-full">
+                <WorkflowVisualizer />
+            </ScrollArea>
           </TabsContent>
           <TabsContent value="console" className="flex-1 mt-4 flex flex-col min-h-0">
             <Card className="flex-1 flex flex-col">

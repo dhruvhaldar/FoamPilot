@@ -130,28 +130,27 @@ export function BlockMeshGenerator({ addFileToCase }: BlockMeshGeneratorProps) {
                 {isLoading ? 'Generating...' : 'Generate File'}
             </Button>
         </div>
-        <div className="space-y-4">
-          <div className="flex justify-between items-start gap-4">
-            <h3 className="font-semibold text-lg flex items-center gap-2 pt-1.5 flex-1 min-w-0"><Boxes className="text-accent-foreground h-5 w-5 shrink-0" /><span className="truncate">Generated `blockMeshDict`</span></h3>
-            <Button onClick={handleAddFile} disabled={!result} className="shrink-0">
-                <FilePlus className="mr-2 h-4 w-4" />
-                Add to Case
-            </Button>
-          </div>
+        <div className="space-y-4 flex flex-col">
+            <div className="space-y-2">
+                <h3 className="font-semibold text-lg flex items-center gap-2"><Boxes className="text-accent-foreground h-5 w-5" />Generated `blockMeshDict`</h3>
+                <Button onClick={handleAddFile} disabled={!result} size="sm">
+                    <FilePlus className="mr-2 h-4 w-4" />
+                    Add to Case
+                </Button>
+            </div>
           
           {isLoading && (
-            <div className="space-y-2">
-              <Skeleton className="h-64 w-full" />
-              <Skeleton className="h-8 w-1/3" />
+            <div className="space-y-2 flex-1">
+              <Skeleton className="h-full w-full" />
             </div>
           )}
 
           {result && (
-            <pre className="p-4 bg-secondary rounded-lg text-xs font-mono overflow-auto h-[600px]">{result}</pre>
+            <pre className="p-4 bg-secondary rounded-lg text-xs font-mono overflow-auto flex-1">{result}</pre>
           )}
 
           {!result && !isLoading && (
-            <div className="flex items-center justify-center h-[600px] bg-secondary rounded-lg">
+            <div className="flex items-center justify-center bg-secondary rounded-lg flex-1">
                 <p className="text-muted-foreground">Generated file will appear here.</p>
             </div>
           )}

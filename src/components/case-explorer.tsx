@@ -84,21 +84,21 @@ export function CaseExplorer() {
                     <Folder />
                     <span className="truncate">{c.name}</span>
                   </div>
-                   <div className="flex items-center">
+                </SidebarMenuButton>
+                <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center">
                     <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100" onClick={(e) => openDeleteDialog(e, c.id)}>
                         <Trash2 className="h-4 w-4 text-destructive"/>
                     </Button>
-                    {c.id === activeCase?.id && state.activeView === 'case' && <ChevronRight className="h-4 w-4" />}
+                    {c.id === activeCase?.id && state.activeView === 'case' && <ChevronRight className="h-4 w-4 ml-2" />}
                  </div>
-                </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="gap-2 p-2">
-          <Button variant="outline" onClick={() => setIsNewCaseDialogOpen(true)} className="w-full justify-start">
+          <Button variant="outline" onClick={() => setIsNewCaseDialogOpen(true)} className="w-full justify-start text-foreground">
             <FolderPlus className="mr-2 h-4 w-4 text-foreground" />
-            <span className="text-foreground">New Case</span>
+            New Case
           </Button>
           <Button variant="secondary" onClick={loadTutorial} className="w-full justify-start">
             <BookCopy className="mr-2 h-4 w-4" /> Load Tutorial

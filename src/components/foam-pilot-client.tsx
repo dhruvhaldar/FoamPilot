@@ -2,12 +2,13 @@
 
 import React, { createContext, useContext, useReducer, ReactNode, useMemo, useState } from 'react';
 import type { Case, CaseFile } from '@/lib/types';
-import { SidebarProvider } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
 import { CaseExplorer } from './case-explorer';
 import { MainView } from './main-view';
 import { tutorialCase } from '@/lib/mock-data';
 import { WelcomeScreen } from './welcome-screen';
 import { SettingsPage } from './settings-page';
+import { Header } from './header';
 
 type ActiveView = 'welcome' | 'case' | 'settings';
 
@@ -177,11 +178,16 @@ export function FoamPilotClient() {
   return (
     <AppContext.Provider value={contextValue}>
       <SidebarProvider>
-        <div className="flex h-full">
-          <CaseExplorer />
-          <main className="flex-1 p-4">
-            {renderMainContent()}
-          </main>
+        <div className="flex flex-col h-full">
+          <Header />
+          <div className="flex flex-1 overflow-hidden">
+            <Sidebar collapsible="icon">
+              <CaseExplorer />
+            </Sidebar>
+            <SidebarInset className="p-4 flex-1 overflow-auto">
+              {renderMainContent()}
+            </SidebarInset>
+          </div>
         </div>
       </SidebarProvider>
     </AppContext.Provider>

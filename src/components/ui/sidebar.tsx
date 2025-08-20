@@ -252,6 +252,7 @@ const Sidebar = React.forwardRef<
           >
             {children}
           </div>
+          <SidebarRail />
         </div>
       </div>
     )

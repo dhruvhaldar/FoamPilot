@@ -39,7 +39,7 @@ export function CaseExplorer() {
 
   return (
     <>
-      <Sidebar className="w-72 border-r">
+      <Sidebar className="w-64 border-r">
         <SidebarHeader>
           <h2 className="text-lg font-semibold">Cases</h2>
         </SidebarHeader>
@@ -63,8 +63,9 @@ export function CaseExplorer() {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="gap-2">
-          <Button variant="outline" onClick={() => setIsNewCaseDialogOpen(true)}>
-            <FolderPlus className="mr-2 h-4 w-4" /> New Case
+          <Button variant="outline" onClick={() => setIsNewCaseDialogOpen(true)} className="w-full">
+            <FolderPlus className="mr-2 h-4 w-4" />
+            <span>New Case</span>
           </Button>
           <Button variant="secondary" onClick={loadTutorial}>
             <BookCopy className="mr-2 h-4 w-4" /> Load Tutorial

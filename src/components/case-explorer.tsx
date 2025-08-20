@@ -96,13 +96,18 @@ export function CaseExplorer() {
           <Button variant="secondary" onClick={loadTutorial}>
             <BookCopy className="mr-2 h-4 w-4" /> Load Tutorial
           </Button>
-          <Button 
-            variant="ghost" 
-            onClick={() => setActiveView('settings')}
-            className="w-full justify-start"
-            >
-            <Settings className="mr-2 h-4 w-4" /> Settings
-          </Button>
+          <SidebarMenu>
+            <SidebarMenuItem>
+                <SidebarMenuButton
+                    onClick={() => setActiveView('settings')}
+                    isActive={state.activeView === 'settings'}
+                    className="w-full justify-start"
+                >
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>Settings</span>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
 

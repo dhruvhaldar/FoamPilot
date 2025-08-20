@@ -1,0 +1,151 @@
+'use client';
+
+import React, { useState, useEffect, useCallback } from 'react';
+import { useAppContext } from './foam-pilot-client';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { File, PlayCircle, Save, Terminal, Sparkles, FolderOpen, CircleDot } from 'lucide-react';
+import { AiOptimizer } from './ai-optimizer';
+import type { CaseFile } from '@/lib/types';
+import { useToast } from '@/hooks/use-toast';
+
+export function MainView() {
+  const { activeCase, dispatch } = useAppContext();
+  const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
+  const [editorContent, setEditorContent] = useState('');
+  const [isUnsaved, setIsUnsaved] = useState(false);
+  const { toast } = useToast();
+
+  const selectedFile = activeCase?.files.find(f => f.id === selectedFileId);
+
+  useEffect(() => {
+    if (activeCase && !selectedFileId && activeCase.files.length > 0) {
+      setSelectedFileId(activeCase.files[0].id);
+    }
+    if (activeCase && selectedFileId && !activeCase.files.find(f => f.id === selectedFileId)) {
+        setSelectedFileId(activeCase.files.length > 0 ? activeCase.files[0].id : null);
+    }
+  }, [activeCase, selectedFileId]);
+  
+  useEffect(() => {
+    if (selectedFile) {
+      setEditorContent(selectedFile.content);
+      setIsUnsaved(false);
+    } else {
+      setEditorContent('');
+    }
+  }, [selectedFileId, activeCase]);
+
+  const handleSave = () => {
+    if (activeCase && selectedFileId && isUnsaved) {
+      dispatch({ type: 'UPDATE_FILE', payload: { caseId: activeCase.id, fileId: selectedFileId, content: editorContent } });
+      setIsUnsaved(false);
+      toast({ title: "File saved!", description: `${selectedFile?.name} has been updated.`});
+    }
+  };
+  
+  const handleContentChange = (content: string) => {
+    setEditorContent(content);
+    setIsUnsaved(true);
+  }
+
+  const handleRunSimulation = useCallback(() => {
+    if (!activeCase || activeCase.isRunning) return;
+
+    dispatch({ type: 'UPDATE_CASE', payload: { id: activeCase.id, isRunning: true, consoleOutput: ['Starting simulation...'] } });
+
+    let iteration = 0;
+    const interval = setInterval(() => {
+      iteration++;
+      const newOutput = `Time = ${iteration}\n...solving for U, p, ...\n`;
+      dispatch({ type: 'UPDATE_CASE', payload: { id: activeCase.id, consoleOutput: [...(activeCase.consoleOutput || []), newOutput] } });
+
+      if (iteration >= 10) {
+        clearInterval(interval);
+        dispatch({
+          type: 'UPDATE_CASE',
+          payload: { id: activeCase.id, isRunning: false, consoleOutput: [...(activeCase.consoleOutput || []), newOutput, 'Simulation finished.'] },
+        });
+      }
+    }, 500);
+  }, [activeCase, dispatch]);
+
+  if (!activeCase) {
+    return null;
+  }
+
+  return (
+    <div className="flex h-full p-4 gap-4">
+      <Card className="w-64 shrink-0">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <FolderOpen className="h-5 w-5" />
+            <span>Case Files</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-1">
+            {activeCase.files.map(file => (
+              <li key={file.id}>
+                <Button
+                  variant={selectedFileId === file.id ? 'secondary' : 'ghost'}
+                  className="w-full justify-start gap-2"
+                  onClick={() => setSelectedFileId(file.id)}
+                >
+                  <File className="h-4 w-4" />
+                  <span className="truncate">{file.name}</span>
+                  {file.id === selectedFileId && isUnsaved && <CircleDot className="h-3 w-3 text-primary animate-pulse" />}
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+      <div className="flex-1 flex flex-col">
+        <header className="flex items-center justify-between pb-4">
+          <h2 className="text-xl font-semibold">{activeCase.name}</h2>
+          <Button onClick={handleRunSimulation} disabled={activeCase.isRunning}>
+            <PlayCircle className="mr-2 h-4 w-4" />
+            {activeCase.isRunning ? 'Running...' : 'Run Simulation'}
+          </Button>
+        </header>
+        <Tabs defaultValue="editor" className="flex-1 flex flex-col">
+          <TabsList>
+            <TabsTrigger value="editor"><File className="mr-2 h-4 w-4" />Editor</TabsTrigger>
+            <TabsTrigger value="console"><Terminal className="mr-2 h-4 w-4" />Console</TabsTrigger>
+            <TabsTrigger value="ai-optimizer"><Sparkles className="mr-2 h-4 w-4" />AI Optimizer</TabsTrigger>
+          </TabsList>
+          <TabsContent value="editor" className="flex-1 flex flex-col mt-4">
+            <div className="flex justify-between items-center mb-2">
+                <p className="text-sm font-medium">{selectedFile?.name || 'No file selected'}</p>
+                <Button onClick={handleSave} disabled={!isUnsaved}>
+                    <Save className="mr-2 h-4 w-4" />
+                    Save
+                </Button>
+            </div>
+            <Textarea
+              value={editorContent}
+              onChange={(e) => handleContentChange(e.target.value)}
+              className="flex-1 font-mono text-sm"
+              placeholder="Select a file to edit..."
+            />
+          </TabsContent>
+          <TabsContent value="console" className="flex-1 mt-4">
+            <Card className="h-full">
+              <CardContent className="p-0">
+                <pre className="p-4 bg-secondary rounded-lg h-[calc(100vh-20rem)] overflow-auto text-xs font-mono">
+                  {activeCase.consoleOutput.join('\n')}
+                </pre>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="ai-optimizer" className="flex-1 mt-4">
+            <AiOptimizer />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+}

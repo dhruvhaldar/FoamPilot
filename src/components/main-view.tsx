@@ -255,18 +255,20 @@ export function MainView() {
             </Card>
           </TabsContent>
            <TabsContent value="visualization" className="flex-1 mt-4 flex flex-col min-h-0">
-            <Card className="flex-1 flex flex-col">
-                <CardContent className="h-full w-full p-4">
-                    <ConsoleChart consoleOutput={activeCase.consoleOutput} />
-                </CardContent>
-            </Card>
+            <ScrollArea className="h-full">
+              <Card className="h-full flex flex-col">
+                  <CardContent className="h-full w-full p-4 flex-1">
+                      <ConsoleChart consoleOutput={activeCase.consoleOutput} />
+                  </CardContent>
+              </Card>
+            </ScrollArea>
           </TabsContent>
-          <TabsContent value="ai-optimizer" className="flex-1 mt-4">
+          <TabsContent value="ai-optimizer" className="flex-1 mt-4 flex flex-col min-h-0">
             <ScrollArea className="h-full">
               <AiOptimizer />
             </ScrollArea>
           </TabsContent>
-          <TabsContent value="block-mesh" className="flex-1 mt-4">
+          <TabsContent value="block-mesh" className="flex-1 mt-4 flex flex-col min-h-0">
             <ScrollArea className="h-full">
               <BlockMeshGenerator addFileToCase={addFileToCase} />
             </ScrollArea>

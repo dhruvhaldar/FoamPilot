@@ -117,9 +117,11 @@ export function FoamPilotClient() {
   return (
     <AppContext.Provider value={contextValue}>
       <SidebarProvider>
-        <div className="flex h-full">
-          <CaseExplorer />
-          <div className="flex-1 overflow-auto">
+        <div className="grid grid-cols-3 h-full">
+          <div className="col-span-1">
+            <CaseExplorer />
+          </div>
+          <div className="col-span-2 overflow-auto">
             {activeCase ? <MainView /> : <WelcomeScreen />}
           </div>
         </div>

@@ -15,6 +15,7 @@ interface AppState {
 
 type Action =
   | { type: 'ADD_CASE'; payload: Case }
+  | { type: 'DELETE_CASE'; payload: string }
   | { type: 'SET_ACTIVE_CASE'; payload: string | null }
   | { type: 'UPDATE_CASE'; payload: Partial<Case> & { id: string } }
   | { type: 'UPDATE_FILE'; payload: { caseId: string, fileId: string, content: string } };
@@ -32,6 +33,15 @@ function appReducer(state: AppState, action: Action): AppState {
         cases: [...state.cases, action.payload],
         activeCaseId: action.payload.id,
       };
+    case 'DELETE_CASE': {
+        const newCases = state.cases.filter(c => c.id !== action.payload);
+        const newActiveCaseId = state.activeCaseId === action.payload ? null : state.activeCaseId;
+        return {
+            ...state,
+            cases: newCases,
+            activeCaseId: newActiveCaseId,
+        };
+    }
     case 'SET_ACTIVE_CASE':
       return { ...state, activeCaseId: action.payload };
     case 'UPDATE_CASE':
@@ -117,22 +127,15 @@ export function FoamPilotClient() {
   return (
     <AppContext.Provider value={contextValue}>
       <SidebarProvider>
-        <div className="grid grid-cols-3 h-full">
-          <div className="col-span-1">
-            <CaseExplorer />
-          </div>
-          {activeCase ? (
-            <div className="col-span-2 overflow-auto">
-              <MainView />
-            </div>
-          ) : (
-            <>
-              <div className="col-span-1"></div>
-              <div className="col-span-1 overflow-auto">
+        <div className="flex h-full">
+          <CaseExplorer />
+          <main className="flex-1 p-4">
+            {activeCase ? (
+                <MainView />
+            ) : (
                 <WelcomeScreen />
-              </div>
-            </>
-          )}
+            )}
+          </main>
         </div>
       </SidebarProvider>
     </AppContext.Provider>

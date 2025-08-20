@@ -60,13 +60,13 @@ export function MainView() {
     const interval = setInterval(() => {
       iteration++;
       const newOutput = `Time = ${iteration}\n...solving for U, p, ...\n`;
-      dispatch({ type: 'UPDATE_CASE', payload: { id: activeCase.id, consoleOutput: [...(activeCase.consoleOutput || []), newOutput] } });
+      dispatch({ type: 'UPDATE_CASE', payload: { id: activeCase.id, consoleOutput: [...(activeCase?.consoleOutput || []), newOutput] } });
 
       if (iteration >= 10) {
         clearInterval(interval);
         dispatch({
           type: 'UPDATE_CASE',
-          payload: { id: activeCase.id, isRunning: false, consoleOutput: [...(activeCase.consoleOutput || []), newOutput, 'Simulation finished.'] },
+          payload: { id: activeCase!.id, isRunning: false, consoleOutput: [...(activeCase!.consoleOutput || []), newOutput, 'Simulation finished.'] },
         });
       }
     }, 500);
@@ -77,7 +77,7 @@ export function MainView() {
   }
 
   return (
-    <div className="flex h-full p-4 gap-4">
+    <div className="flex h-full gap-4">
       <Card className="w-64 shrink-0">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">

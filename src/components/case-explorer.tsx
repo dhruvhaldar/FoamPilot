@@ -17,10 +17,11 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogClose,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Folder, FolderPlus, BookCopy, ChevronRight } from 'lucide-react';
+import { Folder, FolderPlus, BookCopy, ChevronRight, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useAppContext } from './foam-pilot-client';
 
@@ -28,6 +29,7 @@ export function CaseExplorer() {
   const { state, dispatch, addCase, loadTutorial, activeCase } = useAppContext();
   const [isNewCaseDialogOpen, setIsNewCaseDialogOpen] = useState(false);
   const [newCaseName, setNewCaseName] = useState('');
+  const [caseToDelete, setCaseToDelete] = useState<string | null>(null);
 
   const handleCreateCase = () => {
     if (newCaseName.trim()) {
@@ -36,6 +38,20 @@ export function CaseExplorer() {
       setIsNewCaseDialogOpen(false);
     }
   };
+
+  const handleDeleteCase = () => {
+    if (caseToDelete) {
+      dispatch({ type: 'DELETE_CASE', payload: caseToDelete });
+      setCaseToDelete(null);
+    }
+  };
+
+  const openDeleteDialog = (e: React.MouseEvent, caseId: string) => {
+    e.stopPropagation();
+    setCaseToDelete(caseId);
+  }
+
+  const caseForDeletion = state.cases.find(c => c.id === caseToDelete);
 
   return (
     <>
@@ -50,13 +66,18 @@ export function CaseExplorer() {
                 <SidebarMenuButton
                   onClick={() => dispatch({ type: 'SET_ACTIVE_CASE', payload: c.id })}
                   isActive={c.id === activeCase?.id}
-                  className="justify-between"
+                  className="justify-between group"
                 >
                   <div className="flex items-center gap-2 truncate">
                     <Folder />
                     <span className="truncate">{c.name}</span>
                   </div>
-                  {c.id === activeCase?.id && <ChevronRight className="h-4 w-4" />}
+                   <div className="flex items-center">
+                    {c.id === activeCase?.id && <ChevronRight className="h-4 w-4" />}
+                    <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100" onClick={(e) => openDeleteDialog(e, c.id)}>
+                        <Trash2 className="h-4 w-4 text-destructive"/>
+                    </Button>
+                   </div>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
@@ -98,6 +119,23 @@ export function CaseExplorer() {
           </div>
           <DialogFooter>
             <Button type="submit" onClick={handleCreateCase}>Create Case</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!caseToDelete} onOpenChange={(open) => !open && setCaseToDelete(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Case</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete the case "{caseForDeletion?.name}"? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button variant="destructive" onClick={handleDeleteCase}>Delete</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

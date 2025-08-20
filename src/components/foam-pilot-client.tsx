@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useReducer, ReactNode, useMemo, useState } from 'react';
-import type { Case } from '@/lib/types';
+import type { Case, CaseFile } from '@/lib/types';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { CaseExplorer } from './case-explorer';
 import { MainView } from './main-view';
@@ -23,7 +23,8 @@ type Action =
   | { type: 'SET_ACTIVE_CASE'; payload: string | null }
   | { type: 'SET_ACTIVE_VIEW'; payload: ActiveView }
   | { type: 'UPDATE_CASE'; payload: Partial<Case> & { id: string } }
-  | { type: 'UPDATE_FILE'; payload: { caseId: string, fileId: string, content: string } };
+  | { type: 'UPDATE_FILE'; payload: { caseId: string, fileId: string, content: string } }
+  | { type: 'ADD_FILE_TO_CASE', payload: {caseId: string, file: CaseFile }};
 
 const initialState: AppState = {
   cases: [],
@@ -74,6 +75,27 @@ function appReducer(state: AppState, action: Action): AppState {
                             }
                             return f;
                         })
+                    }
+                }
+                return c;
+            })
+        }
+    case 'ADD_FILE_TO_CASE':
+        return {
+            ...state,
+            cases: state.cases.map(c => {
+                if (c.id === action.payload.caseId) {
+                    // check if file with same name exists, if so, update it. else add it.
+                    const fileExists = c.files.some(f => f.name === action.payload.file.name);
+                    if (fileExists) {
+                        return {
+                            ...c,
+                            files: c.files.map(f => f.name === action.payload.file.name ? { ...f, content: action.payload.file.content } : f)
+                        }
+                    }
+                    return {
+                        ...c,
+                        files: [...c.files, action.payload.file]
                     }
                 }
                 return c;

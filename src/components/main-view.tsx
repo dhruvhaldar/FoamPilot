@@ -6,10 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { File, PlayCircle, Save, Terminal, Sparkles, FolderOpen, CircleDot } from 'lucide-react';
+import { File, PlayCircle, Save, Terminal, Sparkles, FolderOpen, CircleDot, Boxes } from 'lucide-react';
 import { AiOptimizer } from './ai-optimizer';
 import type { CaseFile } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
+import { BlockMeshGenerator } from './block-mesh-generator';
 
 export function MainView() {
   const { activeCase, dispatch } = useAppContext();
@@ -78,6 +79,21 @@ export function MainView() {
     return null;
   }
 
+  const addFileToCase = (name: string, content: string) => {
+    if (!activeCase) return;
+    const newFile: CaseFile = {
+      id: `file-${Date.now()}`,
+      name,
+      content,
+    };
+    dispatch({ type: 'ADD_FILE_TO_CASE', payload: { caseId: activeCase.id, file: newFile } });
+    setSelectedFileId(newFile.id);
+    toast({
+      title: 'File Added',
+      description: `The file "${name}" has been added to the case.`,
+    })
+  }
+
   return (
     <div className="flex h-full gap-4">
       <Card className="w-64 shrink-0">
@@ -118,6 +134,7 @@ export function MainView() {
             <TabsTrigger value="editor"><File className="mr-2 h-4 w-4" />Editor</TabsTrigger>
             <TabsTrigger value="console"><Terminal className="mr-2 h-4 w-4" />Console</TabsTrigger>
             <TabsTrigger value="ai-optimizer"><Sparkles className="mr-2 h-4 w-4" />AI Optimizer</TabsTrigger>
+            <TabsTrigger value="block-mesh"><Boxes className="mr-2 h-4 w-4" />BlockMesh</TabsTrigger>
           </TabsList>
           <TabsContent value="editor" className="flex-1 flex flex-col mt-4">
             <div className="flex justify-between items-center mb-2">
@@ -145,6 +162,9 @@ export function MainView() {
           </TabsContent>
           <TabsContent value="ai-optimizer" className="flex-1 mt-4">
             <AiOptimizer />
+          </TabsContent>
+          <TabsContent value="block-mesh" className="flex-1 mt-4">
+            <BlockMeshGenerator addFileToCase={addFileToCase} />
           </TabsContent>
         </Tabs>
       </div>

@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useReducer, ReactNode, useMemo } from 'react';
 import type { Case } from '@/lib/types';
-import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import { CaseExplorer } from './case-explorer';
 import { MainView } from './main-view';
 import { tutorialCase } from '@/lib/mock-data';
@@ -119,7 +119,7 @@ export function FoamPilotClient() {
       <SidebarProvider>
         <div className="flex h-full">
           <CaseExplorer />
-          <div className="flex-1 overflow-auto h-full">
+          <div className="flex-1 overflow-auto">
             {activeCase ? <MainView /> : <WelcomeScreen />}
           </div>
         </div>

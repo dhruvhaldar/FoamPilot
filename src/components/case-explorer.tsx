@@ -67,11 +67,11 @@ export function CaseExplorer() {
         <SidebarContent className="p-2">
           <SidebarMenu>
             {state.cases.map(c => (
-              <SidebarMenuItem key={c.id} className="group">
+              <SidebarMenuItem key={c.id} className="group relative">
                  <SidebarMenuButton
                   onClick={() => handleCaseSelection(c.id)}
                   isActive={c.id === activeCase?.id && state.activeView === 'case'}
-                  className="w-full justify-start"
+                  className="w-full justify-between"
                 >
                   <div className="flex items-center gap-2 truncate flex-1">
                     <Folder />
@@ -88,26 +88,17 @@ export function CaseExplorer() {
             ))}
           </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter className="gap-2">
+        <SidebarFooter className="gap-2 p-2">
           <Button variant="outline" onClick={() => setIsNewCaseDialogOpen(true)} className="w-full">
             <FolderPlus className="mr-2 h-4 w-4 text-foreground" />
             <span className="text-foreground">New Case</span>
           </Button>
-          <Button variant="secondary" onClick={loadTutorial}>
+          <Button variant="secondary" onClick={loadTutorial} className="w-full">
             <BookCopy className="mr-2 h-4 w-4" /> Load Tutorial
           </Button>
-          <SidebarMenu>
-            <SidebarMenuItem>
-                <SidebarMenuButton
-                    onClick={() => setActiveView('settings')}
-                    isActive={state.activeView === 'settings'}
-                    className="w-full justify-start"
-                >
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
+          <Button variant="secondary" onClick={() => setActiveView('settings')} className="w-full">
+            <Settings className="mr-2 h-4 w-4" /> Settings
+          </Button>
         </SidebarFooter>
       </Sidebar>
 

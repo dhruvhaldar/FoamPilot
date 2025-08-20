@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAppContext } from './foam-pilot-client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { File, PlayCircle, Save, Terminal, Sparkles, FolderOpen, CircleDot, Boxes } from 'lucide-react';
+import { File, PlayCircle, Save, Terminal, Sparkles, FolderOpen, CircleDot, Boxes, AreaChart } from 'lucide-react';
 import { AiOptimizer } from './ai-optimizer';
 import type { CaseFile } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
@@ -14,6 +14,7 @@ import Editor from 'react-simple-code-editor';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const customStyle = {
     ...prism,
@@ -37,6 +38,41 @@ const customStyle = {
     }
 }
 
+const parseResiduals = (output: string[]) => {
+    const residuals = [];
+    const residualRegex = /Solving for (\w+), Initial residual = ([\d.e-]+), Final residual = ([\d.e-]+), NoIterations = (\d+)/g;
+    let time = 0;
+    for (const line of output) {
+        if (line.startsWith('Time = ')) {
+            const timeMatch = line.match(/Time = (\d+)/);
+            if (timeMatch) {
+                time = parseInt(timeMatch[1], 10);
+            }
+        }
+        let match;
+        while ((match = residualRegex.exec(line)) !== null) {
+            residuals.push({
+                time: time,
+                variable: match[1],
+                initial: parseFloat(match[2]),
+                final: parseFloat(match[3]),
+                iterations: parseInt(match[4]),
+            })
+        }
+    }
+    // group by time
+    const groupedByTime = residuals.reduce((acc, curr) => {
+        const timeEntry = acc.find(item => item.time === curr.time);
+        if (timeEntry) {
+            timeEntry[curr.variable] = curr.final;
+        } else {
+            acc.push({ time: curr.time, [curr.variable]: curr.final });
+        }
+        return acc;
+    }, [] as {time: number, [key:string]: number }[]);
+
+    return groupedByTime.sort((a,b) => a.time - b.time);
+}
 
 export function MainView() {
   const { activeCase, dispatch } = useAppContext();
@@ -46,6 +82,8 @@ export function MainView() {
   const { toast } = useToast();
 
   const selectedFile = activeCase?.files.find(f => f.id === selectedFileId);
+
+  const chartData = useMemo(() => activeCase ? parseResiduals(activeCase.consoleOutput) : [], [activeCase?.consoleOutput]);
 
   useEffect(() => {
     if (activeCase && !selectedFileId && activeCase.files.length > 0) {
@@ -85,17 +123,29 @@ export function MainView() {
 
     let iteration = 0;
     const interval = setInterval(() => {
-      iteration++;
-      const newOutput = `Time = ${iteration}\n...solving for U, p, ...\n`;
+        iteration++;
+        const U_initial = 1 / (iteration * 0.8 + 1) * Math.random();
+        const U_final = U_initial / (10 + Math.random() * 5);
+        const p_initial = 1 / (iteration * 0.5 + 1) * Math.random();
+        const p_final = p_initial / (10 + Math.random() * 5);
+
+        const newOutput = [
+            `Time = ${iteration}`,
+            `Solving for U, Initial residual = ${U_initial.toExponential(4)}, Final residual = ${U_final.toExponential(4)}, NoIterations = ${Math.floor(Math.random() * 5) + 1}`,
+            `Solving for p, Initial residual = ${p_initial.toExponential(4)}, Final residual = ${p_final.toExponential(4)}, NoIterations = ${Math.floor(Math.random() * 15) + 5}`,
+            `...`,
+        ].join('\n');
+      
       // A bit of a hack to get the latest console output without state dependency issues in interval
-      dispatch({ type: 'UPDATE_CASE', payload: { id: activeCase.id, consoleOutput: [...(document.getElementById('console-output')?.textContent?.split('\n') || []), newOutput] } });
+      const currentOutput = document.getElementById('console-output')?.textContent?.split('\n') || [];
+      const updatedOutput = [...currentOutput, newOutput];
+      dispatch({ type: 'UPDATE_CASE', payload: { id: activeCase.id, consoleOutput: updatedOutput } });
 
-
-      if (iteration >= 10) {
+      if (iteration >= 20) {
         clearInterval(interval);
         dispatch({
           type: 'UPDATE_CASE',
-          payload: { id: activeCase!.id, isRunning: false, consoleOutput: [...(document.getElementById('console-output')?.textContent?.split('\n') || []), newOutput, 'Simulation finished.'] },
+          payload: { id: activeCase!.id, isRunning: false, consoleOutput: [...updatedOutput, 'Simulation finished.'] },
         });
       }
     }, 500);
@@ -170,27 +220,56 @@ export function MainView() {
                     Save
                 </Button>
             </div>
-             <ScrollArea className="border rounded-md bg-background flex-1">
-                <Editor
-                    value={editorContent}
-                    onValueChange={handleContentChange}
-                    highlight={code => (
-                        <SyntaxHighlighter language="cpp" style={customStyle} PreTag="div">
-                            {code}
-                        </SyntaxHighlighter>
-                    )}
-                    padding={10}
-                    className="font-mono text-sm h-full w-full"
-                    style={{
-                        fontFamily: '"Fira code", "Fira Mono", monospace',
-                        fontSize: 14,
-                    }}
-                    placeholder="Select a file to edit..."
+             <div className="border rounded-md bg-background flex-1 relative">
+                <ScrollArea className="h-full w-full absolute">
+                    <Editor
+                        value={editorContent}
+                        onValueChange={handleContentChange}
+                        highlight={code => (
+                            <SyntaxHighlighter language="cpp" style={customStyle} PreTag="div" customStyle={{
+                                minHeight: '100%',
+                                width: '100%',
+                            }}>
+                                {code}
+                            </SyntaxHighlighter>
+                        )}
+                        padding={10}
+                        className="font-mono text-sm"
+                        style={{
+                            fontFamily: '"Fira code", "Fira Mono", monospace',
+                            fontSize: 14,
+                        }}
+                        placeholder="Select a file to edit..."
                     />
-            </ScrollArea>
+                </ScrollArea>
+             </div>
           </TabsContent>
-          <TabsContent value="console" className="flex-1 mt-4">
-            <Card className="h-full">
+          <TabsContent value="console" className="flex-1 mt-4 flex flex-col gap-4">
+            <Card className="flex-1">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <AreaChart className="h-5 w-5" />
+                        Residuals Monitor
+                    </CardTitle>
+                    <CardDescription>
+                        Live plot of solver residuals.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <ResponsiveContainer width="100%" height={200}>
+                        <LineChart data={chartData}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="time" label={{ value: 'Time (s)', position: 'insideBottom', offset: -5 }} />
+                            <YAxis  label={{ value: 'Residual', angle: -90, position: 'insideLeft' }} tickFormatter={(value) => value.toExponential(1)} />
+                            <Tooltip formatter={(value: number) => value.toExponential(4)} />
+                            <Legend />
+                            <Line type="monotone" dataKey="U" stroke="hsl(var(--chart-1))" dot={false} />
+                            <Line type="monotone" dataKey="p" stroke="hsl(var(--chart-2))" dot={false} />
+                        </LineChart>
+                    </ResponsiveContainer>
+                </CardContent>
+            </Card>
+            <Card className="flex-1">
                 <ScrollArea className="h-full w-full">
                 <pre id="console-output" className="p-4 bg-secondary rounded-lg h-full overflow-auto text-xs font-mono">
                     {activeCase.consoleOutput.join('\n')}
@@ -202,7 +281,7 @@ export function MainView() {
             <AiOptimizer />
           </TabsContent>
           <TabsContent value="block-mesh" className="flex-1 mt-4">
-              <BlockMeshGenerator addFileToCase={addFileToCase} />
+            <BlockMeshGenerator addFileToCase={addFileToCase} />
           </TabsContent>
         </Tabs>
       </div>

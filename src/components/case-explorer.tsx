@@ -112,10 +112,12 @@ export function CaseExplorer() {
       </Sidebar>
 
       <Dialog open={isNewCaseDialogOpen} onOpenChange={setIsNewCaseDialogOpen}>
-        <DialogContent>
+        <DialogContent aria-describedby="new-case-dialog-description">
           <DialogHeader>
+            {/* DialogTitle is required for accessibility */}
             <DialogTitle>Create New Case</DialogTitle>
-            <DialogDescription>
+
+            <DialogDescription id="new-case-dialog-description">
               Enter a name for your new OpenFOAM case.
             </DialogDescription>
           </DialogHeader>
@@ -141,10 +143,12 @@ export function CaseExplorer() {
       </Dialog>
 
       <Dialog open={!!caseToDelete} onOpenChange={(open) => !open && setCaseToDelete(null)}>
-        <DialogContent>
+        <DialogContent aria-describedby="delete-case-dialog-description">
           <DialogHeader>
+            {/* DialogTitle is required for accessibility */}
             <DialogTitle>Delete Case</DialogTitle>
-            <DialogDescription>
+
+            <DialogDescription id="delete-case-dialog-description">
               Are you sure you want to delete the case "{caseForDeletion?.name}"? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>

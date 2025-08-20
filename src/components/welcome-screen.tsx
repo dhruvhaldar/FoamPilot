@@ -6,7 +6,7 @@ import { useAppContext } from './foam-pilot-client';
 export function WelcomeScreen() {
     const { loadTutorial } = useAppContext();
     return (
-        <Card className="w-full max-w-lg text-center shadow-lg h-fit self-center justify-self-center">
+        <Card className="w-full text-center shadow-lg h-fit">
             <CardHeader>
                 <CardTitle className="text-3xl font-bold tracking-tight">Welcome to FoamPilot</CardTitle>
                 <CardDescription className="text-lg">Your modern GUI for OpenFOAM.</CardDescription>

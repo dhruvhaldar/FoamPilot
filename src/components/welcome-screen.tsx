@@ -6,13 +6,13 @@ import { useAppContext } from './foam-pilot-client';
 export function WelcomeScreen() {
     const { loadTutorial } = useAppContext();
     return (
-        <div className="flex items-center justify-center h-full bg-muted/20 p-4">
+        <div className="flex items-center justify-center h-full bg-muted/20">
             <Card className="w-full max-w-lg text-center shadow-lg">
                 <CardHeader>
                     <CardTitle className="text-3xl font-bold tracking-tight">Welcome to FoamPilot</CardTitle>
                     <CardDescription className="text-lg">Your modern GUI for OpenFOAM.</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-6 p-6">
                     <p>Get started by creating a new case or loading a tutorial.</p>
                     <div className="flex justify-center gap-4">
                         <div className="flex flex-col items-center gap-2">

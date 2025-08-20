@@ -2,14 +2,42 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAppContext } from './foam-pilot-client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { File, PlayCircle, Save, Terminal, Sparkles, FolderOpen, CircleDot } from 'lucide-react';
+import { File, PlayCircle, Save, Terminal, Sparkles, FolderOpen, CircleDot, Settings } from 'lucide-react';
 import { AiOptimizer } from './ai-optimizer';
 import type { CaseFile } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
+import { Label } from './ui/label';
+import { Input } from './ui/input';
+
+function SettingsPage() {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Settings</CardTitle>
+                <CardDescription>
+                    Configure paths for storing and fetching your OpenFOAM cases.
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <div className="space-y-2">
+                    <Label htmlFor="case-path">Case Storage Path</Label>
+                    <div className="flex gap-2">
+                        <Input id="case-path" type="text" value="/home/user/foam_cases" readOnly />
+                        <Button variant="outline">Browse</Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                        This is the directory where your cases will be saved and loaded from.
+                    </p>
+                </div>
+                 <Button>Save Settings</Button>
+            </CardContent>
+        </Card>
+    )
+}
 
 export function MainView() {
   const { activeCase, dispatch } = useAppContext();
@@ -116,6 +144,7 @@ export function MainView() {
             <TabsTrigger value="editor"><File className="mr-2 h-4 w-4" />Editor</TabsTrigger>
             <TabsTrigger value="console"><Terminal className="mr-2 h-4 w-4" />Console</TabsTrigger>
             <TabsTrigger value="ai-optimizer"><Sparkles className="mr-2 h-4 w-4" />AI Optimizer</TabsTrigger>
+            <TabsTrigger value="settings"><Settings className="mr-2 h-4 w-4" />Settings</TabsTrigger>
           </TabsList>
           <TabsContent value="editor" className="flex-1 flex flex-col mt-4">
             <div className="flex justify-between items-center mb-2">
@@ -143,6 +172,9 @@ export function MainView() {
           </TabsContent>
           <TabsContent value="ai-optimizer" className="flex-1 mt-4">
             <AiOptimizer />
+          </TabsContent>
+          <TabsContent value="settings" className="flex-1 mt-4">
+            <SettingsPage />
           </TabsContent>
         </Tabs>
       </div>

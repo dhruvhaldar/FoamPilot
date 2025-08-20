@@ -10,6 +10,8 @@ import { useToast } from '@/hooks/use-toast';
 import { suggestSolverParameters } from '@/ai/flows/suggest-solver-parameters';
 import type { SolverType } from '@/lib/types';
 import { Sparkles, Wand2 } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 export function AiOptimizer() {
   const { activeCase, dispatch } = useAppContext();
@@ -93,7 +95,9 @@ export function AiOptimizer() {
           <div className="space-y-6">
             <div>
               <h3 className="font-semibold text-lg mb-2 flex items-center gap-2"><Sparkles className="text-accent-foreground h-5 w-5" />Suggested Parameters</h3>
-              <pre className="p-4 bg-secondary rounded-lg text-sm font-mono overflow-auto">{result.suggestedParameters}</pre>
+              <SyntaxHighlighter language="cpp" style={vscDarkPlus} className="p-4 bg-secondary rounded-lg text-sm font-mono overflow-auto" PreTag="pre">
+                {result.suggestedParameters}
+              </SyntaxHighlighter>
             </div>
             <div>
               <h3 className="font-semibold text-lg mb-2">Required Files Check</h3>

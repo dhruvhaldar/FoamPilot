@@ -4,13 +4,16 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAppContext } from './foam-pilot-client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { File, PlayCircle, Save, Terminal, Sparkles, FolderOpen, CircleDot, Boxes } from 'lucide-react';
 import { AiOptimizer } from './ai-optimizer';
 import type { CaseFile } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { BlockMeshGenerator } from './block-mesh-generator';
+import Editor from 'react-simple-code-editor';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
 
 export function MainView() {
   const { activeCase, dispatch } = useAppContext();
@@ -144,12 +147,24 @@ export function MainView() {
                     Save
                 </Button>
             </div>
-            <Textarea
-              value={editorContent}
-              onChange={(e) => handleContentChange(e.target.value)}
-              className="flex-1 font-mono text-sm"
-              placeholder="Select a file to edit..."
-            />
+            <div className='flex-1 font-mono text-sm border rounded-md relative bg-background'>
+              <Editor
+                  value={editorContent}
+                  onValueChange={handleContentChange}
+                  highlight={code => (
+                    <SyntaxHighlighter language="cpp" style={vscDarkPlus} PreTag="div" customStyle={{ margin: 0, padding: 0, background: 'transparent' }}>
+                      {code}
+                    </SyntaxHighlighter>
+                  )}
+                  padding={10}
+                  className="absolute inset-0 w-full h-full overflow-auto"
+                  style={{
+                    fontFamily: '"Fira code", "Fira Mono", monospace',
+                    fontSize: 14,
+                  }}
+                  placeholder="Select a file to edit..."
+                />
+            </div>
           </TabsContent>
           <TabsContent value="console" className="flex-1 mt-4 flex flex-col">
             <Card className="flex-1 flex flex-col">

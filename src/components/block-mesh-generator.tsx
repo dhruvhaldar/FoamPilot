@@ -10,6 +10,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { generateBlockMeshDict } from '@/ai/flows/generate-blockmesh-dict';
 import { Boxes, FilePlus, Sparkles } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const verticesPlaceholder = `(0 0 0)
 (1 0 0)
@@ -131,13 +133,13 @@ export function BlockMeshGenerator({ addFileToCase }: BlockMeshGeneratorProps) {
             </Button>
         </div>
         <div className="space-y-4 flex flex-col">
-            <div className="space-y-2">
-                <h3 className="font-semibold text-lg flex items-center gap-2"><Boxes className="text-accent-foreground h-5 w-5" />Generated `blockMeshDict`</h3>
-                <Button onClick={handleAddFile} disabled={!result} size="sm">
-                    <FilePlus className="mr-2 h-4 w-4" />
-                    Add to Case
-                </Button>
-            </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold text-lg flex items-center gap-2"><Boxes className="text-accent-foreground h-5 w-5" />Generated `blockMeshDict`</h3>
+            <Button onClick={handleAddFile} disabled={!result} size="sm">
+                <FilePlus className="mr-2 h-4 w-4" />
+                Add to Case
+            </Button>
+          </div>
           
           {isLoading && (
             <div className="space-y-2 flex-1">
@@ -146,7 +148,11 @@ export function BlockMeshGenerator({ addFileToCase }: BlockMeshGeneratorProps) {
           )}
 
           {result && (
-            <pre className="p-4 bg-secondary rounded-lg text-xs font-mono overflow-auto flex-1">{result}</pre>
+            <div className="flex-1 rounded-lg bg-secondary overflow-auto">
+              <SyntaxHighlighter language="cpp" style={vscDarkPlus} className="p-4 text-xs font-mono h-full" PreTag="pre">
+                  {result}
+              </SyntaxHighlighter>
+            </div>
           )}
 
           {!result && !isLoading && (

@@ -8,6 +8,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
+  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import {
@@ -68,8 +69,9 @@ export function CaseExplorer() {
   return (
     <>
       <Sidebar className="w-64 border-r">
-        <SidebarHeader>
+        <SidebarHeader className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Cases</h2>
+          <SidebarTrigger />
         </SidebarHeader>
         <SidebarContent className="p-2">
           <SidebarMenu>

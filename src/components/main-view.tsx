@@ -13,6 +13,7 @@ import { BlockMeshGenerator } from './block-mesh-generator';
 import Editor from 'react-simple-code-editor';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const customStyle = {
     ...prism,
@@ -163,22 +164,24 @@ export function MainView() {
                 </Button>
             </div>
             <div className='flex-1 font-mono text-sm border rounded-md relative bg-background'>
-              <Editor
-                  value={editorContent}
-                  onValueChange={handleContentChange}
-                  highlight={code => (
-                    <SyntaxHighlighter language="cpp" style={customStyle} PreTag="div" customStyle={{ margin: 0, padding: 0, background: 'transparent' }}>
-                      {code}
-                    </SyntaxHighlighter>
-                  )}
-                  padding={10}
-                  className="absolute inset-0 w-full h-full overflow-auto"
-                  style={{
-                    fontFamily: '"Fira code", "Fira Mono", monospace',
-                    fontSize: 14,
-                  }}
-                  placeholder="Select a file to edit..."
-                />
+              <ScrollArea className="h-full w-full">
+                <Editor
+                    value={editorContent}
+                    onValueChange={handleContentChange}
+                    highlight={code => (
+                      <SyntaxHighlighter language="cpp" style={customStyle} PreTag="div" customStyle={{ margin: 0, padding: 0, background: 'transparent' }}>
+                        {code}
+                      </SyntaxHighlighter>
+                    )}
+                    padding={10}
+                    className="w-full h-full"
+                    style={{
+                      fontFamily: '"Fira code", "Fira Mono", monospace',
+                      fontSize: 14,
+                    }}
+                    placeholder="Select a file to edit..."
+                  />
+                </ScrollArea>
             </div>
           </TabsContent>
           <TabsContent value="console" className="flex-1 mt-4 flex flex-col">

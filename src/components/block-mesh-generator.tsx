@@ -27,6 +27,12 @@ const customStyle = {
     'cdata': {
         color: '#228b22'
     },
+    'punctuation': {
+        color: '#111827' // Almost black
+    },
+    'operator': {
+        color: '#111827'
+    }
 }
 
 const verticesPlaceholder = `(0 0 0)

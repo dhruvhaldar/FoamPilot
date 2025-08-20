@@ -29,6 +29,12 @@ const customStyle = {
     'cdata': {
         color: '#228b22'
     },
+    'punctuation': {
+        color: '#111827' // Almost black
+    },
+    'operator': {
+        color: '#111827'
+    }
 }
 
 export function MainView() {
@@ -164,7 +170,7 @@ export function MainView() {
                 </Button>
             </div>
             <div className='flex-1 font-mono text-sm border rounded-md relative bg-background'>
-              <ScrollArea className="h-full w-full">
+              <ScrollArea className="h-full w-full absolute">
                 <Editor
                     value={editorContent}
                     onValueChange={handleContentChange}
@@ -186,11 +192,11 @@ export function MainView() {
           </TabsContent>
           <TabsContent value="console" className="flex-1 mt-4 flex flex-col">
             <Card className="flex-1 flex flex-col">
-              <CardContent className="p-0 flex-1">
-                <pre id="console-output" className="p-4 bg-secondary rounded-lg h-full overflow-auto text-xs font-mono">
-                  {activeCase.consoleOutput.join('\n')}
-                </pre>
-              </CardContent>
+                <ScrollArea className="h-full w-full">
+                  <pre id="console-output" className="p-4 bg-secondary rounded-lg h-full overflow-auto text-xs font-mono">
+                    {activeCase.consoleOutput.join('\n')}
+                  </pre>
+                </ScrollArea>
             </Card>
           </TabsContent>
           <TabsContent value="ai-optimizer" className="flex-1 mt-4">

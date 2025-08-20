@@ -90,7 +90,7 @@ export function CaseExplorer() {
         </SidebarContent>
         <SidebarFooter className="gap-2">
           <Button variant="outline" onClick={() => setIsNewCaseDialogOpen(true)} className="w-full">
-            <FolderPlus className="mr-2 h-4 w-4" />
+            <FolderPlus className="mr-2 h-4 w-4 text-foreground" />
             <span className="text-foreground">New Case</span>
           </Button>
           <Button variant="secondary" onClick={loadTutorial}>

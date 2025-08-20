@@ -279,7 +279,7 @@ export function MainView() {
                 </ScrollArea>
             </Card>
           </TabsContent>
-          <TabsContent value="ai-optimizer" className="flex-1 mt-4">
+          <TabsContent value="ai-optimizer" className="flex-1">
             <AiOptimizer />
           </TabsContent>
           <TabsContent value="block-mesh" className="flex-1 mt-4">

@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { BlockMeshGenerator } from './block-mesh-generator';
 import Editor from 'react-simple-code-editor';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 
 export function MainView() {
@@ -152,7 +152,7 @@ export function MainView() {
                   value={editorContent}
                   onValueChange={handleContentChange}
                   highlight={code => (
-                    <SyntaxHighlighter language="cpp" style={vscDarkPlus} PreTag="div" customStyle={{ margin: 0, padding: 0, background: 'transparent' }}>
+                    <SyntaxHighlighter language="cpp" style={prism} PreTag="div" customStyle={{ margin: 0, padding: 0, background: 'transparent' }}>
                       {code}
                     </SyntaxHighlighter>
                   )}

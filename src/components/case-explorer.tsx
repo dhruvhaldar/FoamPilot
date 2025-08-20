@@ -71,18 +71,18 @@ export function CaseExplorer() {
                  <SidebarMenuButton
                   onClick={() => handleCaseSelection(c.id)}
                   isActive={c.id === activeCase?.id && state.activeView === 'case'}
-                  className="w-full justify-between"
+                  className="w-full justify-between pr-8"
                 >
                   <div className="flex items-center gap-2 truncate flex-1">
                     <Folder />
                     <span className="truncate">{c.name}</span>
                   </div>
-                   {c.id === activeCase?.id && state.activeView === 'case' && <ChevronRight className="h-4 w-4" />}
                 </SidebarMenuButton>
-                 <div className="absolute right-1 top-1/2 -translate-y-1/2">
+                 <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center">
                     <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100" onClick={(e) => openDeleteDialog(e, c.id)}>
                         <Trash2 className="h-4 w-4 text-destructive"/>
                     </Button>
+                    {c.id === activeCase?.id && state.activeView === 'case' && <ChevronRight className="h-4 w-4" />}
                  </div>
               </SidebarMenuItem>
             ))}

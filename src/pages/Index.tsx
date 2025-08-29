@@ -3,6 +3,7 @@ import { Dashboard } from "@/components/Dashboard";
 import { Sidebar } from "@/components/Sidebar";
 import { GeometryViewer } from "@/components/GeometryViewer";
 import CaseManager from "@/components/CaseManager";
+import FileEditor from "@/components/FileEditor"; // Import FileEditor
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -14,7 +15,7 @@ const Index = () => {
       case "cases":
         return <CaseManager />;
       case "editor":
-        return <div className="p-8"><h2 className="text-2xl font-bold">File Editor - Coming Soon</h2></div>;
+        return <FileEditor />;
       case "ai-optimizer":
         return <div className="p-8"><h2 className="text-2xl font-bold">AI Parameter Optimizer - Coming Soon</h2></div>;
       case "mesh-generator":

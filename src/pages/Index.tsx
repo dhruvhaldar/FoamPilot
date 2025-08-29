@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Dashboard } from "@/components/Dashboard";
 import { Sidebar } from "@/components/Sidebar";
 import { GeometryViewer } from "@/components/GeometryViewer";
+import CaseManager from "@/components/CaseManager";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -11,7 +12,7 @@ const Index = () => {
       case "dashboard":
         return <Dashboard />;
       case "cases":
-        return <div className="p-8"><h2 className="text-2xl font-bold">Case Manager - Coming Soon</h2></div>;
+        return <CaseManager />;
       case "editor":
         return <div className="p-8"><h2 className="text-2xl font-bold">File Editor - Coming Soon</h2></div>;
       case "ai-optimizer":

@@ -2,7 +2,7 @@
 
 FoamPilot is a cutting-edge web-based graphical user interface designed to streamline OpenFOAM CFD workflows with modern AI capabilities. Built with React, TypeScript, and Tailwind CSS, it provides an intuitive interface for managing simulations, editing configuration files, and optimizing parameters.
 
-![FoamPilot Dashboard](https://via.placeholder.com/800x400/1e293b/0ea5e9?text=FoamPilot+Dashboard)
+<!-- ![FoamPilot Dashboard](https://via.placeholder.com/800x400/1e293b/0ea5e9?text=FoamPilot+Dashboard) -->
 
 ## ✨ Features
 

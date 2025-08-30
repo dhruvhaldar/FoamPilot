@@ -1,19 +1,15 @@
 import React, { useState, useRef, useCallback } from 'react';
-import Editor from 'react-simple-code-editor';
-import { highlight, languages } from 'prismjs/components/prism-core';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-cpp';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 
-const FileEditor: React.FC = () => {
-  const [code, setCode] = useState(`#include <iostream>
+interface FileEditorProps {
+  // Potentially accept props like file path, etc.
+}
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
-}`);
-  const [fileName, setFileName] = useState<string | null>('example.cpp');
+const FileEditor: React.FC<FileEditorProps> = () => {
+  const [fileContent, setFileContent] = useState<string>('');
+  const [fileName, setFileName] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelectClick = () => {
@@ -28,7 +24,7 @@ int main() {
       const reader = new FileReader();
       reader.onload = (e) => {
         const content = e.target?.result as string;
-        setCode(content);
+        setFileContent(content);
         toast.success(`Loaded ${file.name}`);
       };
       reader.onerror = () => {
@@ -40,8 +36,10 @@ int main() {
 
   const handleSave = () => {
     if (fileName) {
+      // Here you would typically use an API to save the file to the server.
+      // For this example, we'll just show a toast.
       toast.success(`Saved ${fileName}`);
-      console.log("Saving content:", code);
+      console.log("Saving content:", fileContent);
     }
   };
 
@@ -56,21 +54,14 @@ int main() {
           type="file"
           onChange={handleFileChange}
           className="hidden"
-          accept=".cpp,.h,.txt"
+          // accept=".txt,.js,.ts,.tsx,.css" // Example file types
         />
       </div>
-      <Editor
-        value={code}
-        onValueChange={code => setCode(code)}
-        highlight={code => highlight(code, languages.cpp, 'cpp')}
-        padding={10}
-        style={{
-          fontFamily: '"Fira Mono", "DejaVu Sans Mono", Menlo, Consolas, "Liberation Mono", Monaco, "Lucida Console", monospace',
-          fontSize: 14,
-          backgroundColor: '#2d2d2d',
-          height: '100%',
-          overflow: 'auto'
-        }}
+      <Textarea
+        value={fileContent}
+        onChange={(e) => setFileContent(e.target.value)}
+        className="flex-grow w-full h-full p-2 resize-none"
+        placeholder="Select a file to view and edit its content."
       />
     </div>
   );
